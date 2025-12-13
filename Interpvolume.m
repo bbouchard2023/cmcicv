@@ -24,7 +24,7 @@ for fr = 2:30 % for frames 2 - 30
     zold = linspace(1,  size(J,2), size(J,2))'; % linspace of original size of data
     znew = linspace(1 , size(J,2), size(J,2) * 4)'; % linspace for interpolated data size (4x the original number of points)
 
-    array = reshape(J, [], 14).'; % reshapes J to use in interpolation
+    array = reshape(J, [], 14).'; % automatically calculates the length of the second dimension
     new = interp1(zold, array, znew).'; % interpolates between real values of J
     J_new = reshape(new, [256,256,56]); % puts interpolated J into a new array
     clear J % clears original J array from workspace

@@ -30,12 +30,12 @@ title('Select Points');  % pick the points using mouse clicks, press right click
 [xi,yi] = getpts; % specify points by mouse click (for boundary selection)
 Pname = ['EndoPoints_new' num2str(s) '.mat'];  % give a name 
 % load(Pname)
-pp = [];
-Points = {};
+pp = []; % creates an array to store the points for each selection
+Points = {}; % creates a cell array to save the points
 for i = 1:length(xi)
-    pp(i,1) = xi(i);
-    pp(i,2) = yi(i);
-    Points{i} = pp(i,:);
+    pp(i,1) = xi(i); % saves the X component of each point
+    pp(i,2) = yi(i); % saves the Y component of each point
+    Points{i} = pp(i,:); % writes the array into a cell array
 end
 hold on
 a = (1:length(xi))'; 
