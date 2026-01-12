@@ -6,7 +6,7 @@
 % Original: Peshala T Gamage
 % Refactored: Brendan Bouchard
 % 20251125
-% Last Updated: 20251125
+% Last Updated: 20260112
 %==========================================================================
 
 clc
@@ -20,7 +20,7 @@ load('New_1.mat')  % load tracked displacement
 load('HPoints9.mat') % load points
 k=9;  % slice number (should match with the selected points)
 
-n1=48+k*30;
+n1=48+k*30; % unused
 clear dx px
 clear dy py
 clear dz 
@@ -28,17 +28,17 @@ clear dz
 clear scgx(fr-1) scgy(fr-1) scgz(fr-1)
 
 vid = VideoWriter('111.avi');  % video name
-vid.FrameRate=30;
-open(vid);
+vid.FrameRate=30; % frame rate
+open(vid); % opens video
 axis tight manual 
 set(gca,'nextplot','replacechildren')
 
-DX{1}=zeros(1,length(Points));
-DY{1}=zeros(1,length(Points));
-DZ{1}=zeros(1,length(Points));
-dt=0.027/2;
+DX{1}=zeros(1,length(Points)); % preallocates array for dx
+DY{1}=zeros(1,length(Points)); % " for dy
+DZ{1}=zeros(1,length(Points)); % " for dz
+dt=0.027/2; % creates time differential
 t=dt;
-start=2; stop=58;  % start and end frams in loop (1:30 -> 1:30)
+start=2; stop=58;  % start and end frames in loop (1:30 -> 1:30)
 dx=zeros(length(Points),length(start:stop));
 dy=zeros(length(Points),length(start:stop));
 dz=zeros(length(Points),length(start:stop));
@@ -46,16 +46,16 @@ dz=zeros(length(Points),length(start:stop));
 
 for loop=1:1
    
-for jj=start:stop
+for jj=start:stop % for frames start - stop
 %     fr=fr_num(jj);
-    fr=jj;
+    fr=jj; % defines frames as fr and jj
    
-    nn=jj-start+2
+    nn=jj-start+2 % 2 frames ahead of the current frame
     %% gauss smoothing to velocity field
     Ux{1,fr}=imgaussfilt3(Ux{1,fr},0.25,'FilterSize',3);
     Uy{1,fr}=imgaussfilt3(Uy{1,fr},0.25,'FilterSize',3);
     Uz{1,fr}=imgaussfilt3(Uz{1,fr},0.5,'FilterSize',3);
-    %%
+    %% sets the dx, dy, and dz for each selected point
 for i=1:length(Points)
     px(i)=Points{i}(1)-60;
     py(i)=Points{i}(2)-60;
@@ -67,9 +67,9 @@ for i=1:length(Points)
     
 end
 
-DX(nn)={dx(:,nn)'};
-DY(nn)={dy(:,nn)'};
-DZ(nn)={dz(:,nn)'};
+DX(nn)={dx(:,nn)'}; % sets dx in the DX cell array
+DY(nn)={dy(:,nn)'}; % sets dy in the DY cell array
+DZ(nn)={dz(:,nn)'}; % sets dz in the DZ cell array
 
 % scatter3(Points{i}(1),Points{i}(2),k)
 hold off

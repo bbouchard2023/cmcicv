@@ -5,23 +5,23 @@ Ux=L.Ux;
 Uy=L.Uy;
 Uz=L.Uz;
 
-DX{1}=zeros(1,length(Points));
-DY{1}=zeros(1,length(Points));
-DZ{1}=zeros(1,length(Points));
-dt=0.027/2;
+DX{1}=zeros(1,length(Points)); % preallocates dx array
+DY{1}=zeros(1,length(Points)); % preallocates dy array
+DZ{1}=zeros(1,length(Points)); % preallocates dz array
+dt=0.027/2; % 
 t=dt;
 % start=29; stop=59;  % start and end frams in loop (1:30 -> 1:30)
 dx=zeros(length(Points),length(start:stop));
 dy=zeros(length(Points),length(start:stop));
 dz=zeros(length(Points),length(start:stop));
 % fr_num=[1:30 1:30 1:30];
-for loop=1:1
+for loop=1:1 % does nothing
    
 for jj=start:stop
 %     fr=fr_num(jj);
-    fr=jj
+    fr=jj % frames
    
-    nn=jj-start+2
+    nn=jj-start+2 % 2 frames ahead of the current frame
 %     Ux{1,fr}=imgaussfilt3(Ux{1,fr},0.25,'FilterSize',3);
 %     Uy{1,fr}=imgaussfilt3(Uy{1,fr},0.25,'FilterSize',3);
 %     Uz{1,fr}=imgaussfilt3(Uz{1,fr},3);
@@ -43,7 +43,7 @@ DZ(nn)={dz(:,nn)'};
 
 % scatter3(Points{i}(1),Points{i}(2),k)
 % hold on
-if opt==1
+if opt==1 % not defined anywhere else
 drawnow
 scatter3(px+dy(:,nn)',py+dx(:,nn)',k+dz(:,nn)','filled','sc')
 hold on
