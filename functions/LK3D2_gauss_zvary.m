@@ -71,7 +71,7 @@ for i=(r+1):(height-r)
         B(2,1)=sum(sum(sum(blockofIy.*blockofIt.*ww)));
         B(3,1)=sum(sum(sum(blockofIz.*blockofIt.*ww)));
         
-        invofA=pinv(A); % pseudoinverse of A (is it faster or something?)
+        invofA=pinv(A); % pseudoinverse of A 
         
         V=invofA*(-B);
         ux(i,j,k)=V(1,1);
