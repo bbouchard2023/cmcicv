@@ -10,10 +10,10 @@ function Hd = filter_bandpass_disp(x,y)
 % All frequency values are in Hz.
 Fs = 74.074;  % Sampling Frequency
 
-Fstop1 = x-0.2;         % First Stopband Frequency
+Fstop1 = x-0.4;         % First Stopband Frequency
 Fpass1 = x;         % First Passband Frequency
 Fpass2 = y;        % Second Passband Frequency
-Fstop2 = y+0.2;        % Second Stopband Frequency
+Fstop2 = y+0.4;        % Second Stopband Frequency
 Astop1 = 60;          % First Stopband Attenuation (dB)
 Apass  = 1;           % Passband Ripple (dB)
 Astop2 = 80;          % Second Stopband Attenuation (dB)
