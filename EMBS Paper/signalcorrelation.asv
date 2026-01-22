@@ -57,10 +57,8 @@ for j = 0.5:0.01:2
 end
 
 mindeltabpm = min(totaldeltabpms);
-[l,p] = find(totaldeltabpms == mindeltabpm);
-minj = totaldeltabpms(l,2);
-mink = totaldeltabpms(l,3);
-fprintf("Minimum difference in BPM is: %f at j = %f and k = %f\n",mindeltabpm,minj,mink)
+
+fprintf("Minimum difference in BPM is: %f\n",mindeltabpm)
 
 %% Plotting
 
