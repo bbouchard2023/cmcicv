@@ -27,8 +27,10 @@ bpsorig = 1/meandeltatorig;
 bpmorig = bpsorig * 60;
 
 %% Filtered Signal BPM and Peaks
-
-        dispfilt = filter(filter_bandpass_disp(2,3),displace);
+totaldeltabpms = [];
+for j = 0.5:0.01:2
+    for k = 2.01:0.01:5
+        dispfilt = filter(filter_bandpass_disp(j,k),displace);
 
         [peak, x] = findpeaks(dispfilt,"MinPeakHeight",0.2e-04);
 
@@ -46,6 +48,19 @@ bpmorig = bpsorig * 60;
         deltapeaks = abs(numpeaks - orignumpeaks);
         deltabpm = abs(bpm - bpmorig);
 
+        fprintf("j: %d k: %d\nDifference in BPM: %f\n\n",j,k,deltabpm)
+        
+        
+        totaldeltabpms = cat(1,totaldeltabpms,[deltabpm j k]);
+
+    end
+end
+
+mindeltabpm = min(totaldeltabpms);
+[l,p] = find(totaldeltabpms == mindeltabpm);
+minj = totaldeltabpms(l,2);
+mink = totaldeltabpms(l,3);
+fprintf("Minimum difference in BPM is: %f at j = %f and k = %f\n",mindeltabpm,minj,mink)
 
 %% Plotting
 
