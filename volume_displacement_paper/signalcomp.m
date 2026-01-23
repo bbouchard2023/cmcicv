@@ -16,6 +16,17 @@ close all
 
 %% Model/SCG Displacement Comparison
 
+ansys_displacement = readmatrix("displacement_data.xlsx");
+ansys_t = ansys_displacement(:,1);
+ansys_disp = ansys_displacement(:,4);
+
+fig = figure;
+fig.WindowState = "maximized";
+plot(ansys_t,ansys_disp,"m")
+title("Computational Model/SCG Displacement Comparison")
+xlabel("Time (s)")
+ylabel("Displacement (m)")
+legend("Computational Model Displacement")
 
 
 %% Ventricular Volume/Chest Displacement Correlation
