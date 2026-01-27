@@ -50,7 +50,7 @@ with os.scandir(fpath) as files:
         # dicom file reader
         dicom_file = pydicom.dcmread(mri_image) # reads dicom file
         trigger_time = dicom_file.TriggerTime # Gets trigger time from metadata
-        print("File ID: IM_00" + i.name + "\n" + "Trigger time: " + str(trigger_time) + "\n") # prints file ID and trigger time
+        print("File ID: IM_" + step + "\n" + "Trigger time: " + str(trigger_time) + "\n") # prints file ID and trigger time
        
         
         # plot result as image
@@ -77,3 +77,10 @@ Last Updated: 20260126
 ==========================================================================
 """
 
+with os.scandir(pixeloutpath) as files:
+    for i in files:
+        
+        data = np.load(i.path)
+        print(data)
+        
+        
