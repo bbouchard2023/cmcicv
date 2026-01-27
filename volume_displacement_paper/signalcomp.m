@@ -14,6 +14,7 @@ clc
 clear
 close all
 
+
 %% Model/SCG Displacement Comparison
 
 ansys_displacement = readmatrix("displacement_data.xlsx");
@@ -31,7 +32,7 @@ legend("Computational Model Displacement")
 
 %% Ventricular Volume/Chest Displacement Correlation
 
-files = dir("volume*.mat");
+files = dir(fullfile("volpt1/","volume*.mat"));
 frameNum = arrayfun(@(f) sscanf(f.name,'volume%d.mat'), files);
 [frameNum, idx] = sort(frameNum);
 files = files(idx);
