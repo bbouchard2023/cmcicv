@@ -57,7 +57,7 @@ with os.scandir(fpath) as files:
         img = dicom_file.pixel_array # defines image from metadata
         plt.imshow(img, cmap=plt.cm.bone) # plots image on graph
         plt.title("Case ID: " + str(caseid) + " Timestep: " + step) 
-        plt.savefig(pngoutpath + i.name + ".png")
+        plt.savefig(pngoutpath + "IM_" + step + ".png")
         plt.show() # shows graph
         
         # saves pixel data to file
