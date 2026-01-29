@@ -57,7 +57,10 @@ with os.scandir(fpath) as files:
        
         if (int(step) - 48) % 30 == 0:
            img_slice += 1
-           os.mkdir(pngoutpath + f"slice_{img_slice}") 
+           
+           # creates folder for slice if one doesn't already exist
+           if not os.path.exists(pngoutpath + f"slice_{img_slice}"):
+               os.mkdir(pngoutpath + f"slice_{img_slice}") 
            slice_path = pngoutpath + f"slice_{img_slice}/"
        
         # plot result as image
@@ -67,11 +70,16 @@ with os.scandir(fpath) as files:
         plt.savefig(slice_path + "IM_" + step + ".png")
         plt.show() # shows graph
         
+        # creates folder for slice if one doesn't already exist
+        if not os.path.exists(pixeloutpath + f"slice_{img_slice}"):
+            os.mkdir(pixeloutpath + f"slice_{img_slice}")
         
-        
+        pixel_slice_path = pixeloutpath + f"slice_{img_slice}/"
+            
         # saves pixel data to file
+        
         pixels = dicom_file.pixel_array
-        np.save(pixeloutpath + "IM_" + step + ".npy", pixels)
+        np.save(pixel_slice_path + "IM_" + step + ".npy", pixels)
     
 # %%
 
@@ -146,35 +154,39 @@ import os
 import pydicom
 import matplotlib.pyplot as plt
 import numpy as np
-import cv2 as cv
+import imageio_ffmpeg as ffmpeg
 
 
 
 caseid = "001" # CHANGE THIS TO THE CURRENT CASE
 pngoutpath = f"D:/cmcicv/mri_images/png/{caseid}/" # output path for .pngs
+arrpath = f"D:/cmcicv/mri_images/pixel_data/{caseid}/" # output path for .npys
 vidoutpath = f"D:/cmcicv/mri_images/videos/{caseid}/" # output path for .mp4s
-fps = 1.5
-imgslice = 0
-numdir = len([name for name in os.listdir(pngoutpath)
+numdir = len([name for name in os.listdir(pngoutpath) # totals number of slices from the image folder
               if os.path.isdir(pngoutpath + name)])
-fps = 1.5
+
+fps = 5 # frames per second of the video
+size = (256, 256) # size of images
 
 
-for i in range(1,numdir + 1):
+for i in range(1,numdir + 1): # iterates through each step for all slice directories in the image folder
 
-# NOT WORKING
-    vid_name = vidoutpath + f"slice_{i}.avi"
-    fourcc = cv.VideoWriter_fourcc(*"MJPG")
-    vid = cv.VideoWriter(vid_name, fourcc, fps, (256, 256))
-    with os.scandir(pngoutpath + f"slice_{i}") as files:
+    vid_name = vidoutpath + f"slice_{i}.avi" # sets the video name
+    writer = ffmpeg.write_frames(vid_name, size, fps=fps) # sets up the writer
+    writer.send(None) # initializes the writer
+    
+    
+    with os.scandir(arrpath + f"slice_{i}") as files: 
         for img in files:
-            
-            images = cv.imread(img.path, cv.IMREAD_GRAYSCALE)
-            images = cv.normalize(images, None, 0, 255, cv.NORM_MINMAX).astype(np.uint8)
-            images = cv.cvtColor(images, cv.COLOR_GRAY2BGR)
-            
-            vid.write(images)
-            
-        vid.release()
-cv.destroyAllWindows()
-        
+            print(img.path)
+            image = np.load(img.path) # imports the image array
+            image = image.astype(np.float32)
+            image -= image.min()
+            image /= image.max()
+            image *= 255
+            image = image.astype(np.uint8)
+            image = np.stack([image]*3, axis=-1) # makes the array have a third dimension
+            writer.send(image) # writes the image to the video
+
+    
+    writer.close() # closes the writer (needed to reinitialize for each slice folder)
