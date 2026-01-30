@@ -4,7 +4,7 @@ Computational Modeling of Cardiac Induced Chest Vibrations
 ## Refactor Progression
 
 ### Main Codes
-dicom_read.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto) (https://img.shields.io/badge/refactored-100%25-brightgreen?logoSize=auto)
+dicom_read.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto) ![Static Badge](https://img.shields.io/badge/refactored-100%25-brightgreen?logoSize=auto)
 
 Interpvolume.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto)
 

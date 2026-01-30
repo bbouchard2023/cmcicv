@@ -7,7 +7,7 @@ Takes MRI images and creates a geometry for displacement evaluation
 
 Brendan Bouchard
 20260126
-Last Updated: 20260127
+Last Updated: 20260129
 ==========================================================================
 """
 
@@ -24,7 +24,7 @@ Read a series of images
 
 Brendan Bouchard
 20260126
-Last Updated: 20260128
+Last Updated: 20260129
 ==========================================================================
 """
 
@@ -146,7 +146,7 @@ Takes images from each slice and creates a video; image size is 256x256
 
 Brendan Bouchard
 20260128
-Last Updated: 20260128
+Last Updated: 20260129
 ==========================================================================
 """
 
@@ -165,7 +165,7 @@ vidoutpath = f"D:/cmcicv/mri_images/videos/{caseid}/" # output path for .mp4s
 numdir = len([name for name in os.listdir(pngoutpath) # totals number of slices from the image folder
               if os.path.isdir(pngoutpath + name)])
 
-fps = 5 # frames per second of the video
+fps = 7 # frames per second of the video
 size = (256, 256) # size of images
 
 
