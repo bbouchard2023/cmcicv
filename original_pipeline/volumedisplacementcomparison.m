@@ -15,7 +15,7 @@ close all
 
 
 
-dispdata = readmatrix("SCG Displacement.csv");
+dispdata = readmatrix("Displacement Data.csv");
 displ = dispdata(:,2);
 t = dispdata(:,1);
 
@@ -27,10 +27,15 @@ vol = interp(vol,2);
 vol = vol(2:end);
 delta = abs(vol - displ);
 
-fig = figure;
-fig.Name = "Ventricular Volume and Displacement Comparison";
+rho = corrcoef(vol,displ);
+rho = rho(1,2);
 
-title("Ventricular Volume and Displacement Comparison")
+disp(rho)
+
+fig = figure;
+fig.Name = "Ventricular Volume and Chest Displacement Comparison";
+
+title("Ventricular Volume and Chest Displacement Comparison")
 yyaxis left
 plot(t,displ,"m")
 xlabel("Time (s)")
@@ -40,8 +45,5 @@ yyaxis right
 plot(t,vol,"g")
 ylabel("Volume (mm^3)")
 legend("Displacement","Cardiac Volume")
+text(4,50000,"\rho = " + num2str(rho))
 
-rho = corrcoef(vol,displ);
-rho = rho(1,2);
-
-disp(rho)
