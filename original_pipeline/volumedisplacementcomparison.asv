@@ -37,15 +37,10 @@ disp(rho)
 [volzeros, tvol] = findpeaks(vol);
 [displzeros, tdispl] = findpeaks(displ);
 
+for i = 1:length(volzeros)
+    if volzeros(i) < 154400 
 
-test = (volzeros > 154400) | (volzeros < 150000 & volzeros > 140000);
-volzeros = volzeros(test);
-tvol = tvol(test);
-
-voldisplag = abs(t(tvol) - t(tdispl));
-avglag = mean(voldisplag);
-
-disp(avglag)
+% voldisplag = abs(displzeros(:,1) - volzeros(:,1));
 
 fig = figure;
 fig.Name = "Ventricular Volume and Chest Displacement Comparison";
@@ -62,7 +57,6 @@ yyaxis right
 plot(t,vol,"g")
 ylabel("Volume (mm^3)")
 scatter(t(tvol),volzeros,"yx")
-
 
 legend("Displacement","Cardiac Volume","Volume Peaks","Displacement Peaks")
 text(4,50000,"\rho = " + num2str(rho))
