@@ -100,42 +100,64 @@ import os
 import pydicom
 import matplotlib.pyplot as plt
 import numpy as np
-
-
+from stl import mesh
+from skimage import measure
 
 caseid = "001" # CHANGE THIS TO THE CURRENT CASE
-pixeloutpath = f"D:/cmcicv/mri_images/pixel_data/{caseid}/"
+pixeloutpath = f"D:/cmcicv/mri_images/pixel_data/{caseid}/slice_"
 voloutpath = f"D:/cmcicv/mri_images/volume_data/{caseid}/"
+meshpath = f"D:/cmcicv/mri_images/meshes/{caseid}/"
 img_slice = 0
 frames = []
 
-
-with os.scandir(pixeloutpath) as files:
-    for i in files:
-        
-        data = np.load(i.path) # imports data from each .npy file
-        img = i.name # gets file name
-        img_nopre = str.removeprefix(i.name, "IM_") 
-        img_nosfx = str.removesuffix(img_nopre, ".npy")
-        step = int(img_nosfx) # strips file name down to step number
- 
-        frames.append(data) # creates a list of all the arrays
-
-        
-
-        
-        if (step - 48) % 30 == 0:
-            img_slice += 1 # increments for each slice
-
+for g in range(1,14):
+    with os.scandir(pixeloutpath + str(g)) as files:
+        for i in files:
+            
+            data = np.load(i.path) # imports data from each .npy file
+            img = i.name # gets file name
+            img_nopre = str.removeprefix(i.name, "IM_") 
+            img_nosfx = str.removesuffix(img_nopre, ".npy")
+            step = int(img_nosfx) # strips file name down to step number
+     
+            frames.append(data) # creates a list of all the arrays
     
-stored_data = np.stack(frames,axis=2) # stores 2D data on top of each other (along the third dimension)       
+            
+    
+            
+            if (step - 48) % 30 == 0:
+                img_slice += 1 # increments for each slice
+    
+        
+    stored_data = np.stack(frames,axis=2) # stores 2D data on top of each other (along the third dimension)       
+    
+    mri_slices = np.array_split(stored_data,img_slice,axis=2) # splits each slice (30 frames per slice)
+    
+    for idx, mrislice in enumerate(mri_slices, start=1):
+        np.save(voloutpath + f"slice_{idx}.npy", mrislice)
 
-mri_slices = np.array_split(stored_data,img_slice,axis=2) # splits each slice (30 frames per slice)
+def img2stl(stack_path,out_path):
+    datapoints = []
+    with os.scandir(stack_path) as files:
+        for q in files:
+            
+            volume = np.load(q.path)            
+            datapoints.append(volume)
+            
 
-for idx, mrislice in enumerate(mri_slices, start=1):
-    np.save(voloutpath + f"slice_{idx}.npy", mrislice)
+        verts, faces, normal, values = measure.marching_cubes(stored_data, level=978, step_size=1)
 
-
+    newvol = np.zeros(faces.shape[0], dtype=mesh.Mesh.dtype)
+    genmesh = mesh.Mesh(newvol)
+    
+    for i, f in enumerate(faces):
+        genmesh.vectors[i] = verts[f]
+        
+    genmesh.save(out_path + "mesh.stl")
+    print(f"Saved .stl to {out_path}")
+    
+img2stl(voloutpath, meshpath)
+   
 # %%
 
 """
