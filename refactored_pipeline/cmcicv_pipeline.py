@@ -7,7 +7,7 @@ Takes MRI images and creates a geometry for displacement evaluation
 
 Brendan Bouchard
 20260126
-Last Updated: 20260129
+Last Updated: 20260211
 ==========================================================================
 """
 
@@ -92,7 +92,7 @@ Restructures data to temporal volume of slices
 
 Brendan Bouchard
 20260128
-Last Updated: 20260128
+Last Updated: 20260211
 ==========================================================================
 """
 
@@ -136,24 +136,18 @@ for g in range(1,14):
     for idx, mrislice in enumerate(mri_slices, start=1):
         np.save(voloutpath + f"slice_{idx}.npy", mrislice)
 
-def img2stl(stack_path,out_path):
-    datapoints = []
-    with os.scandir(stack_path) as files:
-        for q in files:
-            
-            volume = np.load(q.path)            
-            datapoints.append(volume)
-            
+def img2stl(stack_path,out_path): # function to take pixel data and make a .stl
+        
 
-        verts, faces, normal, values = measure.marching_cubes(stored_data, level=978, step_size=1)
+    verts, faces, normal, values = measure.marching_cubes(stored_data, level=978, step_size=1) # structures arrays into a volume (I think)
 
-    newvol = np.zeros(faces.shape[0], dtype=mesh.Mesh.dtype)
-    genmesh = mesh.Mesh(newvol)
+    newvol = np.zeros(faces.shape[0], dtype=mesh.Mesh.dtype) # I think this preallocates the shape of the mesh with zeros
+    genmesh = mesh.Mesh(newvol) # creates the mesh (I think?)
     
     for i, f in enumerate(faces):
-        genmesh.vectors[i] = verts[f]
+        genmesh.vectors[i] = verts[f] # determines the vertices based on their vector quantities (I think?)
         
-    genmesh.save(out_path + "mesh.stl")
+    genmesh.save(out_path + "mesh.stl") # saves the mesh to file
     print(f"Saved .stl to {out_path}")
     
 img2stl(voloutpath, meshpath)
