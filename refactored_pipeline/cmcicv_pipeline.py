@@ -100,8 +100,6 @@ import os
 import pydicom
 import matplotlib.pyplot as plt
 import numpy as np
-from stl import mesh
-from skimage import measure
 
 caseid = "001" # CHANGE THIS TO THE CURRENT CASE
 pixeloutpath = f"D:/cmcicv/mri_images/pixel_data/{caseid}/slice_"
@@ -136,21 +134,9 @@ for g in range(1,14):
     for idx, mrislice in enumerate(mri_slices, start=1):
         np.save(voloutpath + f"slice_{idx}.npy", mrislice)
 
-def img2stl(stack_path,out_path): # function to take pixel data and make a .stl
-        
+# Select adjacent pixels that have intensities within a range from a point in the center of the ventricle (pick experimentally)
 
-    verts, faces, normal, values = measure.marching_cubes(stored_data, level=978, step_size=1) # structures arrays into a volume (I think)
-
-    newvol = np.zeros(faces.shape[0], dtype=mesh.Mesh.dtype) # I think this preallocates the shape of the mesh with zeros
-    genmesh = mesh.Mesh(newvol) # creates the mesh (I think?)
-    
-    for i, f in enumerate(faces):
-        genmesh.vectors[i] = verts[f] # determines the vertices based on their vector quantities (I think?)
-        
-    genmesh.save(out_path + "mesh.stl") # saves the mesh to file
-    print(f"Saved .stl to {out_path}")
-    
-img2stl(voloutpath, meshpath)
+# From the selected range, create a transient volume (maybe an .encas file or similar) for import into Ansys
    
 # %%
 
