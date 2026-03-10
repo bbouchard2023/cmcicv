@@ -134,9 +134,8 @@ for g in range(1,14):
     for idx, mrislice in enumerate(mri_slices, start=1):
         np.save(voloutpath + f"slice_{idx}.npy", mrislice)
 
-# Select adjacent pixels that have intensities within a range from a point in the center of the ventricle (pick experimentally)
 
-# From the selected range, create a transient volume (maybe an .encas file or similar) for import into Ansys
+
    
 # %%
 
