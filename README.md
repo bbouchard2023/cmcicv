@@ -1,24 +1,9 @@
 # cmcicv
 Computational Modeling of Cardiac Induced Chest Vibrations
 
-## Refactor Progression
+## Goals
+- Create a code that analyzes chest displacement using Lucas-Kanade and optical flow
+- Alternatively, create a pipeline to generate an Ansys simulation for the same outcome
 
-### Main Codes
-dicom_read.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto) ![Static Badge](https://img.shields.io/badge/refactored-100%25-brightgreen?logoSize=auto)
-
-Interpvolume.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto)
-
-motion3Dfrbfr_tinterp_looped.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto)
-
-plotheart_comparebfbr_loop.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto)
-
-savedisplacementforsimulation_new.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto)
-
-selectpoints.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto)
-
-### Functions
-imageDerivatives3D2.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto)
-
-LK3D2_gauss_zvary.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto)
-
-savedispfr_loop.m ![Static Badge](https://img.shields.io/badge/commented-100%25-brightgreen?logoSize=auto)
+## Authors
+Brendan Bouchard

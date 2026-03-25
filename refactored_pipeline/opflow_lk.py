@@ -8,11 +8,12 @@ Hopefully will allow us to measure chest displacement to mm accuracy using Lucas
 
 Brendan Bouchard
 20260319
-Last Updated: 20260319
+Last Updated: 20260324
 ==========================================================================
 """
 import os
 from natsort import natsorted
+import time
 
 rootpath = "/home/brendan/cmcicv/mri_images/dicom/"
 
@@ -30,17 +31,34 @@ slice_num = 1
 
 
 for imgs in sorteddir:
-    print(imgs.name)
     fname = imgs.name
+    print(fname)
     rpre = str.removeprefix(fname, "IM_")
     rsuf = str.removesuffix(rpre, ".dcm")
     num = str.lstrip(rsuf, "0")
     num = int(num)
     num = num - 48
-    print(num)
+    if num % 30 == 0 and num != 0:
+       print("new slice")
+       slice_num += 1
+    try:
+        os.mkdir(outpath + f"slice_{slice_num}/")
+        slicepath = outpath + f"slice_{slice_num}/"
+    except FileExistsError:
+        slicepath = outpath + f"slice_{slice_num}/"
     
-    if num % 30 == 0:
-        print("new slice")
+    time.sleep(0.4)
+    fpath = slicepath + fname
+    print(fpath)
+    
+    with open(fpath, 'w') as f:
+        f.write(f"Saving {imgs} to {slicepath}")
+        
+
+        
+          
+    
+        
         
     
     
