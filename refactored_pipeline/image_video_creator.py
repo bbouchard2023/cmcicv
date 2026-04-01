@@ -24,62 +24,64 @@ Read a series of images
 
 Brendan Bouchard
 20260126
-Last Updated: 20260129
+Last Updated: 20260401
 ==========================================================================
 """
 
 import os
 import pydicom
 import matplotlib.pyplot as plt
+from natsort import natsorted
 import numpy as np
 
 
 
 caseid = "001" # CHANGE THIS TO THE CURRENT CASE
-fpath = "D:/cmcicv/mri_images/dicom/" # folder path of MRI images
-pngoutpath = f"D:/cmcicv/mri_images/png/{caseid}/" # output path for .pngs
-pixeloutpath = f"D:/cmcicv/mri_images/pixel_data/{caseid}/"
+fpath = "/home/brendan/cmcicv/mri_images/dicom/" # folder path of MRI images
+pngoutpath = f"/home/brendan/cmcicv/mri_images/png/{caseid}/" # output path for .pngs
+pixeloutpath = f"/home/brendan/cmcicv/mri_images/pixel_data/{caseid}/"
 img_slice = 0
+sorteddir = natsorted(os.scandir(fpath), key=lambda img: img.name)
 
-with os.scandir(fpath) as files:
-    for i in files: # sequence through dicom files
-        
-        image_path = i.name 
-        img_nopre = str.removeprefix(i.name, "IM_")
-        step = str.removesuffix(img_nopre, ".dcm") # strips file name string to only the time step
-        
-        mri_image = os.path.join(fpath,image_path) # full path of dicom file
-        
-        # dicom file reader
-        dicom_file = pydicom.dcmread(mri_image) # reads dicom file
-        trigger_time = dicom_file.TriggerTime # Gets trigger time from metadata
-        print("File ID: IM_" + step + "\n" + "Trigger time: " + str(trigger_time) + "\n") # prints file ID and trigger time
+
+for i in sorteddir: # sequence through dicom files
+    
+    image_path = i.name 
+    img_nopre = str.removeprefix(i.name, "IM_")
+    step = str.removesuffix(img_nopre, ".dcm") # strips file name string to only the time step
+    
+    mri_image = os.path.join(fpath,image_path) # full path of dicom file
+    
+    # dicom file reader
+    dicom_file = pydicom.dcmread(mri_image) # reads dicom file
+    trigger_time = dicom_file.TriggerTime # Gets trigger time from metadata
+    print("File ID: IM_" + step + "\n" + "Trigger time: " + str(trigger_time) + "\n") # prints file ID and trigger time
+   
+    if (int(step) - 48) % 30 == 0:
+       img_slice += 1
        
-        if (int(step) - 48) % 30 == 0:
-           img_slice += 1
-           
-           # creates folder for slice if one doesn't already exist
-           if not os.path.exists(pngoutpath + f"slice_{img_slice}"):
-               os.mkdir(pngoutpath + f"slice_{img_slice}") 
-           slice_path = pngoutpath + f"slice_{img_slice}/"
-       
-        # plot result as image
-        img = dicom_file.pixel_array # defines image from metadata
-        plt.imshow(img, cmap=plt.cm.bone) # plots image on graph
-        plt.title("Case ID: " + str(caseid) + " Timestep: " + step) 
-        plt.savefig(slice_path + "IM_" + step + ".png")
-        plt.show() # shows graph
+       # creates folder for slice if one doesn't already exist
+       if not os.path.exists(pngoutpath + f"slice_{img_slice}"):
+           os.mkdir(pngoutpath + f"slice_{img_slice}") 
+       slice_path = pngoutpath + f"slice_{img_slice}/"
+   
+    # plot result as image
+    img = dicom_file.pixel_array # defines image from metadata
+    plt.imshow(img, cmap=plt.cm.bone) # plots image on graph
+    plt.title("Case ID: " + str(caseid) + " Timestep: " + step) 
+    plt.savefig(slice_path + "IM_" + step + ".png")
+    plt.show() # shows graph
+    
+    # creates folder for slice if one doesn't already exist
+    if not os.path.exists(pixeloutpath + f"slice_{img_slice}"):
+        os.mkdir(pixeloutpath + f"slice_{img_slice}")
+    
+    pixel_slice_path = pixeloutpath + f"slice_{img_slice}/"
         
-        # creates folder for slice if one doesn't already exist
-        if not os.path.exists(pixeloutpath + f"slice_{img_slice}"):
-            os.mkdir(pixeloutpath + f"slice_{img_slice}")
-        
-        pixel_slice_path = pixeloutpath + f"slice_{img_slice}/"
-            
-        # saves pixel data to file
-        
-        pixels = dicom_file.pixel_array
-        np.save(pixel_slice_path + "IM_" + step + ".npy", pixels)
+    # saves pixel data to file
+    
+    pixels = dicom_file.pixel_array
+    np.save(pixel_slice_path + "IM_" + step + ".npy", pixels)
     
 # %%
 
@@ -102,9 +104,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 caseid = "001" # CHANGE THIS TO THE CURRENT CASE
-pixeloutpath = f"D:/cmcicv/mri_images/pixel_data/{caseid}/slice_"
-voloutpath = f"D:/cmcicv/mri_images/volume_data/{caseid}/"
-meshpath = f"D:/cmcicv/mri_images/meshes/{caseid}/"
+pixeloutpath = f"/home/brendan/cmcicv/mri_images/pixel_data/{caseid}/slice_"
+voloutpath = f"/home/brendan/cmcicv/mri_images/volume_data/{caseid}/"
+meshpath = f"/home/brendan/cmcicv/mri_images/meshes/{caseid}/"
 img_slice = 0
 frames = []
 
@@ -160,9 +162,9 @@ import imageio_ffmpeg as ffmpeg
 
 
 caseid = "001" # CHANGE THIS TO THE CURRENT CASE
-pngoutpath = f"D:/cmcicv/mri_images/png/{caseid}/" # output path for .pngs
-arrpath = f"D:/cmcicv/mri_images/pixel_data/{caseid}/" # output path for .npys
-vidoutpath = f"D:/cmcicv/mri_images/videos/{caseid}/" # output path for .mp4s
+pngoutpath = f"/home/brendan/cmcicv/mri_images/png/{caseid}/" # output path for .pngs
+arrpath = f"/home/brendan/cmcicv/mri_images/pixel_data/{caseid}/" # output path for .npys
+vidoutpath = f"/home/brendan/cmcicv/mri_images/videos/{caseid}/" # output path for .mp4s
 numdir = len([name for name in os.listdir(pngoutpath) # totals number of slices from the image folder
               if os.path.isdir(pngoutpath + name)])
 
