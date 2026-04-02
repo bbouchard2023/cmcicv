@@ -8,16 +8,20 @@ Hopefully will allow us to measure chest displacement to mm accuracy using Lucas
 
 Brendan Bouchard
 20260319
-Last Updated: 20260324
+Last Updated: 20260401
 ==========================================================================
 """
 import os
 from natsort import natsorted
 import time
 
+case = "001"
+
 rootpath = "/home/brendan/cmcicv/mri_images/dicom/"
 
 mripath = "/home/brendan/cmcicv/mri_images/"
+
+pxpath = mripath + f"pixel_data/{case}/"
 
 try:
     os.mkdir("/home/brendan/cmcicv/mri_images/dicom_slices")
@@ -53,12 +57,36 @@ for imgs in sorteddir:
     
     with open(fpath, 'w') as f:
         f.write(f"Saving {imgs} to {slicepath}")
-        
 
-        
-          
-    
-        
-        
-    
-    
+# %%
+"""
+==========================================================================
+Optical Flow for MRI Chest Displacement
+
+Hopefully will allow us to measure chest displacement to mm accuracy using Lucas-Kanade algorithm and optical flow
+
+Brendan Bouchard
+20260402
+Last Updated: 20260402
+==========================================================================
+"""
+
+import os
+from natsort import natsorted
+import numpy as np
+
+temparr = []
+slice = 7
+
+slicenum = str(slice)
+
+pixelpath = natsorted(os.scandir(pxpath + f"slice_{slicenum}/"), key=lambda img: img.name)
+
+for pix in pixelpath:
+    fname = pix.name
+    arr = np.load(pxpath + f"slice_{slicenum}/" + fname)
+    temparr.append(arr)
+
+fullarr = np.stack(temparr,axis=-1)
+
+for i in range(1, len(fullarr))
