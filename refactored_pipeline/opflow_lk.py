@@ -77,33 +77,35 @@ import numpy as np
 
 def imgder(im1, im2, im3, delta):
     
-    dx = np.zeros(2,2,2)
-    dx[:,:,1] = np.array([-1, 1], [-1, 1])
-    dx[:,:,2] = np.array([-1, 1], [-1, 1])
+    dx = np.zeros((2,2,2))
+    dx[:,:,0] = np.array([[-1, 1], [-1, 1]])
+    dx[:,:,1] = np.array([[-1, 1], [-1, 1]])
     dx = 0.25 * dx
     
-    dy = np.zeros(2,2,2)
-    dy[:,:,1] = np.array([-1 -1], [1, 1])
-    dy[:,:,1] = np.array([-1, -1], [1, 1])
+    dy = np.zeros((2,2,2))
+    dy[:,:,0] = np.array([[-1, -1], [1, 1]])
+    dy[:,:,1] = np.array([[-1, -1], [1, 1]])
     dy = 0.25 * dy
     
-    dz = np.zeros(2,2,2)
-    dz[:,:,1] = np.array([-1, -1], [-1, -1])
-    dz[:,:,2] = np.ones(2,2)
+    dz = np.zeros((2,2,2))
+    dz[:,:,0] = np.array([[-1, -1], [-1, -1]])
+    dz[:,:,1] = np.ones((2,2))
     dz = 0.25 * dz
     
-    dt = np.ones(2,2,2)
+    dt = np.ones((2,2,2))
     dt = 0.25 * dt
     
+    print(im2.shape)
     Ix, Iy, Iz = np.gradient(im2, 1, 1, ((8 * 13) / (55 * 1.25))) 
     It = im3 - im1
     It = It / (1 * (2 * delta))
     
     return Ix, Iy, Iz, It
 
-def opflow_lk(im1, im2, im3, radius, depth, delta):
-    
-    h1, w1, d1 = im1.size
+def opflow_lk(im1, im2, im3, radius, depth, delta, iteration):
+
+    h1, w1 = im1.shape
+    d1 = iteration
     
     ux = np.zeros(im1.size)
     uy = ux
@@ -170,7 +172,7 @@ for pix in pixelpath:
 fullarr = np.stack(temparr,axis=-1)
 
 for i in range(2, fullarr.shape[2]): 
-    ux, uy, uz = opflow_lk(fullarr[:,:,i - 1], fullarr[:, :, i], fullarr[:, : , i + 1], radius, depth, delta) 
+    ux, uy, uz = opflow_lk(fullarr[:,:,i - 1], fullarr[:, :, i], fullarr[:, : , i + 1], radius, depth, delta, i) 
 
 
 
